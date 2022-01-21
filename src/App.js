@@ -44,14 +44,38 @@ function Video(props) {
   );
 }
 
+function withHightlight(Component) {
+  return function (props) {
+    const { views } = props;
+    if (views <= 100) {
+      return (
+        <New>
+          <Component {...props} />
+        </New>
+      );
+    } else if (views >= 1000) {
+      return (
+        <Popular>
+          <Component {...props} />
+        </Popular>
+      );
+    } else {
+      return <Component {...props} />;
+    }
+  };
+}
+
+const ArticleHighlighted = withHightlight(Article);
+const VideoHightlighted = withHightlight(Video);
+
 function List(props) {
   return props.list.map((item) => {
     switch (item.type) {
       case 'video':
-        return <Video {...item} />;
+        return <VideoHightlighted {...item} />;
 
       case 'article':
-        return <Article {...item} />;
+        return <ArticleHighlighted {...item} />;
     }
   });
 }
